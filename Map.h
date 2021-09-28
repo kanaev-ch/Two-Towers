@@ -40,6 +40,6 @@ public:
 	Map();
 	~Map();
 
-	void DRAW_MAP(sf::RenderWindow&, float offsetX_);
+	void DRAW_MAP(sf::RenderWindow&);
 };
 

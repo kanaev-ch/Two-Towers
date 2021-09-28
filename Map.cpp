@@ -15,7 +15,7 @@ Map::~Map()
 {
 }
 
-void Map::DRAW_MAP(sf::RenderWindow& window_, float offsetX_)
+void Map::DRAW_MAP(sf::RenderWindow& window_)
 {
 	for (int i = 0; i < H_by_TILES; ++i)//by height
 	{
@@ -29,13 +29,13 @@ void Map::DRAW_MAP(sf::RenderWindow& window_, float offsetX_)
 			{
 				sprite.setTextureRect(sf::IntRect(32, 64, 32, 32));//Sky tiles choose in screen sprite
 				float ifl = static_cast<float>(i); float jfl = static_cast<float>(j);
-				sprite.setPosition(jfl * 32 - offsetX_, ifl * 32);//Under Tree draw grass tiles
+				sprite.setPosition(jfl * 32 - offsetX, ifl * 32);//Under Tree draw grass tiles, offsetX needs for scroll static objects and map
 				window_.draw(sprite);
 
 				sprite.setTextureRect(sf::IntRect(0, 128, 32, 32));//Tree tiles choose in screen sprite
 			}
 			float ifl = static_cast<float>(i); float jfl = static_cast<float>(j);
-			sprite.setPosition(jfl * 32 - offsetX_, ifl * 32);//set position of tile on screen
+			sprite.setPosition(jfl * 32 - offsetX, ifl * 32);//set position of tile on screen, offsetX needs for scroll static objects and map
 //			sprite_cloud.setPosition(j * 32, i * 32);
 //			window_.draw(sprite_cloud);
 			window_.draw(sprite);

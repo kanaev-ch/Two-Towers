@@ -51,12 +51,15 @@ void Explosion::EXPLODE_CHANGE_FRAMES(float time_)//func of change frames of exp
 	{
 		explode_currentFrame = 0;//reset start frame
 		explode_live = false;//not draw explode frames
+
+		offsetX = 0;//reset offsetX for scroll map to start position
 	}
 	sprite_explode.setTextureRect(sf::IntRect(32 * static_cast<int>(explode_currentFrame), 0, 32, 32));//changing frames of explode
-	sprite_explode.setPosition(x_explode, y_explode);//every time set position of explode
+//	sprite_explode.setPosition(x_explode, y_explode);//every time set position of explode
 }
 
 void Explosion::EXPLODE_DRAW_FRAME(sf::RenderWindow& window_)
 {
+	sprite_explode.setPosition(x_explode - offsetX, y_explode);//every time set position of explode, offsetX needs for scroll static objects and map
 	window_.draw(sprite_explode);
 }

@@ -25,7 +25,7 @@ int game(sf::RenderWindow& window_)
 	Map map;	//create Map
 	Fortress fort(100, 630);	//create object of fortress
 
-	float offsetX = 0;//temp var offset of scrolling map
+//	float offsetX = 0;//temp var offset of scrolling map
 
 	while (window_.isOpen())
 	{
@@ -43,11 +43,13 @@ int game(sf::RenderWindow& window_)
 				window_.close();
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 			{
-				offsetX += 5.f;//temp scroll map
+				if (offsetX < 32 * W_by_TILES - W_float - 4)//don't scroll map over right edge
+					offsetX += 10.f;//temp scroll map
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 			{
-				offsetX -= 5.f;//temp scroll map
+				if (offsetX > 0)//don't scroll map over left edge
+					offsetX -= 10.f;//temp scroll map
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 			{
@@ -70,6 +72,7 @@ int game(sf::RenderWindow& window_)
 				if (event.key.code == sf::Keyboard::Space) //указываешь кнопку
 				{
 					fort.START_FIRE();
+					fort.CATAPULT_ANIME_LIVE(true);
 				}
 			}
 		}
@@ -81,14 +84,18 @@ int game(sf::RenderWindow& window_)
 		}
 
 		fort.MOVE_CIRCLE(time);//moving circle, changing it coords by X Y, Block of end circle fly and start explode is inside
+
+		fort.COLLISION_CIR();
 		
-		if (fort.EXPLODE_LIVE()) fort.EXPLODE_CHANGE_FRAMES(time);
+		if (fort.EXPLODE_LIVE()) fort.EXPLODE_CHANGE_FRAMES(time);//explode anime if FLAG is live
+
+		if (fort.CATAPULT_ANIME_LIVE()) fort.CHANGE_CATAPULT_FRAMES(time);//anime catapult if FLAG is live
 
 		window_.clear();
 		
 		DRAW_MAIN_RECT(window_);//draw main empty white window
 
-		map.DRAW_MAP(window_, offsetX);//draw map tiles, VERY HARD CYCLE!!!
+		map.DRAW_MAP(window_);//draw map tiles, VERY HARD CYCLE!!!
 		fort.DRAW_CATAPULT(window_);//draw catapult tile
 
 		fort.DRAW_CIRCLE(window_);//draw circle, no matter if he is standing or flying
@@ -97,10 +104,14 @@ int game(sf::RenderWindow& window_)
 
 		if (fort.EXPLODE_LIVE()) fort.EXPLODE_DRAW_FRAME(window_);
 
+//		fort.building.DRAW_BUILDING(window_, offsetX);
+		fort.DRAW_BUILDING(window_, offsetX);
+
 		window_.display();
 
 //		std::cout << fort.X_CIR() << " " << fort.Y_CIR() << std::endl;
 //		std::cout << "\t\t" << time << std::endl;
+//		std::cout << offsetX << std::endl;
 	}
 	return 0;
 }
