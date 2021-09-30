@@ -44,7 +44,7 @@ bool Explosion::EXPLODE_LIVE()const
 	return explode_live;
 }
 
-void Explosion::EXPLODE_CHANGE_FRAMES(float time_)//func of change frames of explode
+void Explosion::EXPLODE_CHANGE_FRAMES(float time_, bool friend_or_enemy_)//func of change frames of explode
 {
 	explode_currentFrame += .004f * time_;//speed of changing anime frames
 	if (explode_currentFrame > 12)//STOP anime, there are 12 frames in sprite sheet
@@ -52,7 +52,7 @@ void Explosion::EXPLODE_CHANGE_FRAMES(float time_)//func of change frames of exp
 		explode_currentFrame = 0;//reset start frame
 		explode_live = false;//not draw explode frames
 
-		offsetX = 0;//reset offsetX for scroll map to start position
+		if (friend_or_enemy_) offsetX = 0;//reset offsetX for scroll map to start position
 	}
 	sprite_explode.setTextureRect(sf::IntRect(32 * static_cast<int>(explode_currentFrame), 0, 32, 32));//changing frames of explode
 //	sprite_explode.setPosition(x_explode, y_explode);//every time set position of explode

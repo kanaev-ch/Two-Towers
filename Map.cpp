@@ -17,6 +17,8 @@ Map::~Map()
 
 void Map::DRAW_MAP(sf::RenderWindow& window_)
 {
+	if (offsetX > 32 * W_by_TILES - W_float - 4) offsetX = 32 * W_by_TILES - W_float - 4;//Don't scroll map if it is on right edge
+
 	for (int i = 0; i < H_by_TILES; ++i)//by height
 	{
 		for (int j = 0; j < W_by_TILES; ++j)//by width

@@ -3,10 +3,19 @@
 
 
 Building::Building()
-	:x_building_left_corner(600), y_building_top_corner(512)//left top corner coordinates of fort building rectangle string
+//	:x_building_left_corner(600), y_building_top_corner(512)	//initializing in Fortress::Fortress
+	:fortress_life(0)
 {
 	texture.loadFromFile("Fortress.png");//load texture tiles from file
 	sprite.setTexture(texture);//load spriti from texture
+
+	for (int i = 0; i < sizeof(building_string) / sizeof(building_string[0]); ++i)//by height
+	{
+		for (unsigned int j = 0; j < building_string[0].getSize(); ++j)//by width
+		{
+			if (building_string[i][j] != 'O') fortress_life += 100; //each block plus 100, except 'O' (empty)
+		}
+	}
 }
 
 

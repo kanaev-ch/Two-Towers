@@ -16,6 +16,7 @@ private:
 	sf::Texture texture;
 	sf::Sprite sprite;
 public:
+	int fortress_life;//lifes of fort building
 	sf::String building_string[5] = {
 		"OPOPOPO",
 		"OkOkOkO",
@@ -23,8 +24,8 @@ public:
 		"TYiYiYt",
 		"CWwwwWc"
 	};
-	float x_building_left_corner;//left top corner coordinates of fort building rectangle string
-	float y_building_top_corner;//left top corner coordinates of fort building rectangle string
+	float x_building_left_corner;//left top corner coordinates of fort building rectangle string, initializing in Fortress::Fortress
+	float y_building_top_corner;//left top corner coordinates of fort building rectangle string, initializing in Fortress::Fortress
 
 	Building();
 	~Building();

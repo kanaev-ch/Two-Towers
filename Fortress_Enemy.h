@@ -5,9 +5,9 @@
 #include "Data.h"
 #include "Explosion.h"
 #include "Building.h"
-//#include "Fortress_Enemy.h"
+//#include "Fortress.h"
 
-class Fortress
+class Fortress_Enemy
 	: public Explosion//, public Building//class Explosion is member of Fortress
 {
 private:
@@ -28,18 +28,19 @@ private:
 	sf::RectangleShape line_catapult_fire;//rect line_of_fire
 	float len_line_cat_fire;//length line_of_fire, , from it is counting of x_cir_speed
 
-	bool cir_live;//flag cir fly or not
+//	bool cir_live;//flag cir fly or not
 	float cir_angle;//angle of drawed line_of_fire, from it is counting of y_cir_speed
 
-//	int fortress_life;//lifes of fort building
+//	int fortress_enemy_life;//lifes of fort building
 
 //	Building building;
 public:
 	Building building;
-//	int fortress_life;//lifes of fort building
+//	int fortress_enemy_life;//lifes of fort building
+	bool cir_live;
 
-	Fortress(float, float);
-	~Fortress();
+	Fortress_Enemy(float, float);
+	~Fortress_Enemy();
 
 	void CHANGE_CATAPULT_FRAMES(float);
 	void DRAW_CATAPULT(sf::RenderWindow&);
@@ -62,15 +63,14 @@ public:
 	void Y_CIR(float);
 	float Y_CIR()const;
 
-	bool CIR_LIVE()const;
-
 	void LEN_LINE_CAT_FIRE(float);
 	float LEN_LINE_CAT_FIRE()const;
 
 	void MOVE_CIRCLE(float, float);
 
-//	int COLLISION_CIR(Fortress_Enemy &);
-	int COLLISION_CIR(Building &);
+//	int COLLISION_CIR(Fortress&);
+//	int COLLISION_CIR();
+	int COLLISION_CIR(Building&);
 	void RESET_CIR_AND_START_EXPLODE();
 
 	void DRAW_CIRCLE(sf::RenderWindow&);

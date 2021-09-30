@@ -1,5 +1,5 @@
 #include "game.h"
-#include "Fortress.h"
+//#include "Fortress.h"
 
 static float TIME(sf::Clock& c_)//func for binding to time, This func doesn't work or work!!! WHAT A FUCK!!
 {
@@ -20,10 +20,14 @@ static void DRAW_MAIN_RECT(sf::RenderWindow& window_)//func draw white main rect
 
 int game(sf::RenderWindow& window_)
 {
+	srand((unsigned)time(NULL)); rand(); rand();
 	sf::Clock clock;//create object of sf::Clock, from this moment counting time
 
 	Map map;	//create Map
-	Fortress fort(100, 630);	//create object of fortress
+	Fortress fort(100, 630);	//create object of fortress with start coord of catapult from wich counting all other coords objects
+	Fortress_Enemy fort_enemy(1000, 630);	//create object of fortress with start coord of catapult from wich counting all other coords objects
+	Wind wind;
+
 
 //	float offsetX = 0;//temp var offset of scrolling map
 
@@ -35,6 +39,7 @@ int game(sf::RenderWindow& window_)
 		clock.restart();	//restart time
 		time = time / 400;  //change game speed
 		std::cout << "\t" << time << std::endl;*/
+//		if (offsetX > 220) offsetX = 220;
 
 		sf::Event event;
 		while (window_.pollEvent(event))
@@ -43,13 +48,13 @@ int game(sf::RenderWindow& window_)
 				window_.close();
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 			{
-				if (offsetX < 32 * W_by_TILES - W_float - 4)//don't scroll map over right edge
-					offsetX += 10.f;//temp scroll map
+				if (!fort.CIR_LIVE() && offsetX < 32 * W_by_TILES - W_float - 4)//don't scroll map over right edge AND in time of flight cir
+					offsetX += 10.f;//scroll map
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 			{
-				if (offsetX > 0)//don't scroll map over left edge
-					offsetX -= 10.f;//temp scroll map
+				if (!fort.CIR_LIVE() && offsetX > 0)//don't scroll map over left edge AND in time of flight cir
+					offsetX -= 10.f;//scroll map
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 			{
@@ -67,12 +72,15 @@ int game(sf::RenderWindow& window_)
 			{				
 //				fort.START_FIRE();
 			}*/
-			if (event.type == sf::Event::KeyReleased) //проверка на отпускание
+			if (event.type == sf::Event::KeyReleased) //check for release key
 			{
-				if (event.key.code == sf::Keyboard::Space) //указываешь кнопку
+				if (event.key.code == sf::Keyboard::Space) //what key release
 				{
 					fort.START_FIRE();
 					fort.CATAPULT_ANIME_LIVE(true);
+
+//					fort_enemy.START_FIRE();
+//					fort_enemy.CATAPULT_ANIME_LIVE(true);
 				}
 			}
 		}
@@ -83,35 +91,50 @@ int game(sf::RenderWindow& window_)
 			fort.UPDATE_LINE_CAT_FIRE(.05f, 0);//increase lenght line_of_fire for speed of circle by X
 		}
 
-		fort.MOVE_CIRCLE(time);//moving circle, changing it coords by X Y, Block of end circle fly and start explode is inside
+		fort.MOVE_CIRCLE(time, wind.WIND_SPEED());//moving circle, changing it coords by X Y, Block of end circle fly and start explode is inside, AND with speed of wind
+		fort_enemy.MOVE_CIRCLE(time, wind.WIND_SPEED());//moving circle, changing it coords by X Y, Block of end circle fly and start explode is inside, AND with speed of wind
 
-		fort.COLLISION_CIR();
+		fort.COLLISION_CIR(fort_enemy.building);//func check circle collision with ground or buildings: enemy (argument), own building (it's inside)
+		fort_enemy.COLLISION_CIR(fort.building);//func check circle collision with ground or buildings: enemy (argument), own building (it's inside)
 		
-		if (fort.EXPLODE_LIVE()) fort.EXPLODE_CHANGE_FRAMES(time);//explode anime if FLAG is live
+		if (fort.EXPLODE_LIVE()) fort.EXPLODE_CHANGE_FRAMES(time, true);//explode anime if FLAG is live
+		if (fort_enemy.EXPLODE_LIVE()) fort_enemy.EXPLODE_CHANGE_FRAMES(time, false);//explode anime if FLAG is live
 
+		fort_enemy.START_FIRE();//start enemy fire
+		
 		if (fort.CATAPULT_ANIME_LIVE()) fort.CHANGE_CATAPULT_FRAMES(time);//anime catapult if FLAG is live
+		if (fort_enemy.CATAPULT_ANIME_LIVE()) fort_enemy.CHANGE_CATAPULT_FRAMES(time);//anime catapult if FLAG is live
+
+		wind.SET_WIND_AND_MOVE_SNOWFLAKES(time);
 
 		window_.clear();
 		
 		DRAW_MAIN_RECT(window_);//draw main empty white window
 
 		map.DRAW_MAP(window_);//draw map tiles, VERY HARD CYCLE!!!
+
 		fort.DRAW_CATAPULT(window_);//draw catapult tile
+		fort_enemy.DRAW_CATAPULT(window_);//draw catapult tile
 
 		fort.DRAW_CIRCLE(window_);//draw circle, no matter if he is standing or flying
+		fort_enemy.DRAW_CIRCLE(window_);//draw circle, no matter if he is standing or flying
 
 		fort.DRAW_LINE_CATAPULT_FIRE(window_);//draw line_of_fire rect
 
 		if (fort.EXPLODE_LIVE()) fort.EXPLODE_DRAW_FRAME(window_);
+		if (fort_enemy.EXPLODE_LIVE()) fort_enemy.EXPLODE_DRAW_FRAME(window_);
 
-//		fort.building.DRAW_BUILDING(window_, offsetX);
-		fort.DRAW_BUILDING(window_, offsetX);
+		fort.building.DRAW_BUILDING(window_, offsetX);
+		fort_enemy.building.DRAW_BUILDING(window_, offsetX);
+
+		wind.DRAW_SNOWFLAKES(window_);
 
 		window_.display();
 
 //		std::cout << fort.X_CIR() << " " << fort.Y_CIR() << std::endl;
 //		std::cout << "\t\t" << time << std::endl;
 //		std::cout << offsetX << std::endl;
+//		std::cout << 32 * W_by_TILES - W_float - 4 << std::endl;
 	}
 	return 0;
 }

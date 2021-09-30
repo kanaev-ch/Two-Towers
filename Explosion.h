@@ -23,7 +23,7 @@ public:
 	void EXPLODE_LIVE(bool);
 	bool EXPLODE_LIVE()const;
 
-	void EXPLODE_CHANGE_FRAMES(float);
+	void EXPLODE_CHANGE_FRAMES(float, bool);
 	void EXPLODE_DRAW_FRAME(sf::RenderWindow&);
 };
 

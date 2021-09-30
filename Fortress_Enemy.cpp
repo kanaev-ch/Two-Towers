@@ -1,18 +1,18 @@
-#include "Fortress.h"
+#include "Fortress_Enemy.h"
 
 
 
-Fortress::Fortress(float x_cat_, float y_cat_)
+Fortress_Enemy::Fortress_Enemy(float x_cat_, float y_cat_)
 	: x_catapult(x_cat_), y_catapult(y_cat_), circle(5.f), x_cir_speed(0), y_cir_speed(0),
 	len_line_cat_fire(5.f), cir_live(false), cir_angle(30),//create start parameters of coords, circle size, circle speed, lenght line_of_fire
-	catapult_anime_live(false), catapult_currentFrame(0)//, fortress_life(0)
+	catapult_anime_live(false), catapult_currentFrame(0)//, fortress_enemy_life(0)
 {
 	texture_catapult.loadFromFile("catapult.png");
 	sprite_catapult.setTexture(texture_catapult);
-	sprite_catapult.setTextureRect(sf::IntRect(0, 0, 64, 46));//start frame of catapult
+	sprite_catapult.setTextureRect(sf::IntRect(0 + 64, 0, -64, 46));//start frame of catapult
 
 	//start parameters of circle
-	x_cir = x_catapult + 10; 
+	x_cir = x_catapult + 40;
 	y_cir = y_catapult + 30;
 	circle.setFillColor(sf::Color::Black);
 	circle.setPosition(x_cir, y_cir);
@@ -23,26 +23,26 @@ Fortress::Fortress(float x_cat_, float y_cat_)
 	line_catapult_fire.rotate(-cir_angle);
 	line_catapult_fire.setPosition(x_catapult, y_catapult);
 
-//	Building::x_building_left_corner = x_catapult + 130;//start coords of building
+//	Building::x_building_left_corner = x_catapult - 300;//start coords of building
 //	Building::y_building_top_corner = y_catapult - 22 - 96;//start coords of building
-	building.x_building_left_corner = x_catapult + 130;//start coords of building
+	building.x_building_left_corner = x_catapult - 300;//start coords of building
 	building.y_building_top_corner = y_catapult - 22 - 96;//start coords of building
-	//block of initialising count of fortress life, each block plus 100, except 'O' (empty)
-/*	for (int i = 0; i < sizeof(building_string) / sizeof(building_string[0]); ++i)//by height
+	//block of initialising count of Fortress_Enemy life, each block plus 100, except 'O' (empty)
+/*	for (int i = 0; i < sizeof(building.building_string) / sizeof(building.building_string[0]); ++i)//by height
 	{
-		for (unsigned int j = 0; j < building_string[0].getSize(); ++j)//by width
+		for (unsigned int j = 0; j < building.building_string[0].getSize(); ++j)//by width
 		{
-			if (building_string[i][j] != 'O') fortress_life += 100; //each block plus 100, except 'O' (empty)
+			if (building.building_string[i][j] != 'O') fortress_enemy_life += 100; //each block plus 100, except 'O' (empty)
 		}
 	}*/
 }
 
 
-Fortress::~Fortress()
+Fortress_Enemy::~Fortress_Enemy()
 {
 }
 
-void Fortress::CHANGE_CATAPULT_FRAMES(float time_)//func change frames anime catapult
+void Fortress_Enemy::CHANGE_CATAPULT_FRAMES(float time_)//func change frames anime catapult
 {
 	catapult_currentFrame += .004f * time_;//speed of changing anime frames
 	if (catapult_currentFrame > 3)//STOP anime, there are 12 frames in sprite sheet
@@ -50,115 +50,111 @@ void Fortress::CHANGE_CATAPULT_FRAMES(float time_)//func change frames anime cat
 		catapult_currentFrame = 0;//reset start frame
 		catapult_anime_live = false;//not draw explode frames
 	}
-	sprite_catapult.setTextureRect(sf::IntRect(64 * static_cast<int>(catapult_currentFrame), 0, 64, 46));//changing frames of explode
+	sprite_catapult.setTextureRect(sf::IntRect(64 * static_cast<int>(catapult_currentFrame) + 64, 0, -64, 46));//changing frames of explode
 }
 
-void Fortress::DRAW_CATAPULT(sf::RenderWindow& window_)//draw catapult tile
+void Fortress_Enemy::DRAW_CATAPULT(sf::RenderWindow & window_)//draw catapult tile
 {
-//	sprite_catapult.setTextureRect(sf::IntRect(0, 0, 64, 48));
+	//	sprite_catapult.setTextureRect(sf::IntRect(0, 0, 64, 48));
 	sprite_catapult.setPosition(x_catapult - offsetX, y_catapult);//offsetX needs for scroll static objects and map
 	window_.draw(sprite_catapult);
 
-//	std::cout << building.fortress_life << std::endl;
+//	std::cout << "\t\t" << building.fortress_life << std::endl;
 }
 
-void Fortress::CATAPULT_ANIME_LIVE(bool l_)
+void Fortress_Enemy::CATAPULT_ANIME_LIVE(bool l_)
 {
 	catapult_anime_live = l_;
 }
 
-bool Fortress::CATAPULT_ANIME_LIVE()const
+bool Fortress_Enemy::CATAPULT_ANIME_LIVE()const
 {
 	return catapult_anime_live;
 }
 
-void Fortress::X_CIR_SPEED(float x_)
+void Fortress_Enemy::X_CIR_SPEED(float x_)
 {
 	x_cir_speed = x_;
 }
-float Fortress::X_CIR_SPEED()const
+float Fortress_Enemy::X_CIR_SPEED()const
 {
 	return x_cir_speed;
 }
 
-void Fortress::Y_CIR_SPEED(float y_)
+void Fortress_Enemy::Y_CIR_SPEED(float y_)
 {
 	y_cir_speed = y_;
 }
 
-float Fortress::Y_CIR_SPEED()const
+float Fortress_Enemy::Y_CIR_SPEED()const
 {
 	return y_cir_speed;
 }
 
-void Fortress::X_CATAPULT(float x_)
+void Fortress_Enemy::X_CATAPULT(float x_)
 {
 	x_catapult = x_;
 }
-float Fortress::X_CATAPULT()const
+float Fortress_Enemy::X_CATAPULT()const
 {
 	return x_catapult;
 }
 
-void Fortress::Y_CATAPULT(float y_)
+void Fortress_Enemy::Y_CATAPULT(float y_)
 {
 	y_catapult = y_;
 }
 
-float Fortress::Y_CATAPULT()const
+float Fortress_Enemy::Y_CATAPULT()const
 {
 	return y_catapult;
 }
 
-void Fortress::X_CIR(float x_)
+void Fortress_Enemy::X_CIR(float x_)
 {
 	x_cir = x_;
 }
-float Fortress::X_CIR()const
+float Fortress_Enemy::X_CIR()const
 {
 	return x_cir;
 }
 
-void Fortress::Y_CIR(float y_)
+void Fortress_Enemy::Y_CIR(float y_)
 {
 	y_cir = y_;
 }
 
-float Fortress::Y_CIR()const
+float Fortress_Enemy::Y_CIR()const
 {
 	return y_cir;
 }
 
-bool Fortress::CIR_LIVE()const
-{
-	return cir_live;
-}
-
-void Fortress::LEN_LINE_CAT_FIRE(float l_)
+void Fortress_Enemy::LEN_LINE_CAT_FIRE(float l_)
 {
 	len_line_cat_fire = l_;
 }
 
-float Fortress::LEN_LINE_CAT_FIRE()const
+float Fortress_Enemy::LEN_LINE_CAT_FIRE()const
 {
 	return len_line_cat_fire;
 }
 
-void Fortress::MOVE_CIRCLE(float time_, float wind_speed_)//changing coord of circle at screen
+void Fortress_Enemy::MOVE_CIRCLE(float time_, float wind_speed_)//changing coord of circle at screen
 {
 	if (cir_live)//Only if circle is live
 	{
-		x_cir += x_cir_speed * time_ + wind_speed_;//changing by X with speed and sf::Clock AND with speed of wind
+		x_cir -= x_cir_speed * time_ - wind_speed_;//changing by X with speed and sf::Clock AND with speed of wind
 	//	if (y_cir < 650) y_cir -= y_cir_speed * time_;//changing by Y with speed and sf::Clock
 		y_cir -= y_cir_speed * time_;//changing by Y with speed and sf::Clock
 //		circle.setPosition(x_cir - offsetX_, y_cir);//set coords in screen with changed parameters
 		y_cir_speed -= .00005f * time_;//it's for gravitation of circle, lower speed by Y and changing it vector
 
-		if (x_cir > W_float - 150 && x_cir < 32 * W_by_TILES - 150) offsetX += x_cir_speed * time_;//change offsetX for scroll picture WITH CIR MOVING if it on right edge, but no more than size of map
+		//change offsetX for scroll picture WITH CIR MOVING if it on right edge, but no more than size of map
+//		if (x_cir > W_float - 150 && x_cir < 32 * W_by_TILES - 150) offsetX += x_cir_speed * time_;//It don't need here because don't scroll screen if enemy cir is fly
 	}
 }
 
-void Fortress::RESET_CIR_AND_START_EXPLODE()//func reset circle to start position and start explode
+void Fortress_Enemy::RESET_CIR_AND_START_EXPLODE()//func reset circle to start position and start explode
 {
 	//block of start explode
 	Explosion::EXPLODE_LIVE(true);
@@ -168,20 +164,22 @@ void Fortress::RESET_CIR_AND_START_EXPLODE()//func reset circle to start positio
 //	std::cout << Explosion::X_EXPLODE() << " " << x_cir << std::endl;
 
 	//block of reset circle to start position
-	x_cir = x_catapult + 10;//reset cir to start coords
+	x_cir = x_catapult + 40;//reset cir to start coords
 	y_cir = y_catapult + 30;//reset cir to start coords
 	x_cir_speed = y_cir_speed = 0;//no cir move by X Y
 	cir_live = false;//fall flag cir live, needs for one time live cir in time of fly
 	line_catapult_fire.setSize(sf::Vector2f(len_line_cat_fire + 50, 5.f));//set default size of line_of_fire
 }
 
-//int Fortress::COLLISION_CIR(Fortress_Enemy & fortress_enemy_)//func check circle collision with ground or building, and with enemy building (argument)
-int Fortress::COLLISION_CIR(Building & enemy_building_)//func check circle collision with ground or building, and with enemy building (argument)
+//int Fortress_Enemy::COLLISION_CIR(Fortress & fortress_)//func check circle collision with ground or building, and with enemy building (argument)
+//int Fortress_Enemy::COLLISION_CIR()//func check circle collision with ground or building, and with enemy building (argument)
+int Fortress_Enemy::COLLISION_CIR(Building& enemy_building_)//func check circle collision with ground or building, and with enemy building (argument)
 {
 	//block of chk collision with ground
-	if (y_cir > 660 && (x_cir - offsetX != x_catapult + 10))//for not working if circle is at start place of catapult
+	if (y_cir > 660 && (x_cir != x_catapult + 10))//for not working if circle is at start place of catapult
 	{
 		RESET_CIR_AND_START_EXPLODE();
+
 		return 0;//exit without cheking farer
 	}
 
@@ -200,7 +198,8 @@ int Fortress::COLLISION_CIR(Building & enemy_building_)//func check circle colli
 
 				RESET_CIR_AND_START_EXPLODE();
 
-				if (!(building.fortress_life -= 100)) exit(0);//temp end game if fortress life is 0
+//				if (!(fortress_enemy_life -= 100)) exit(0);//temp end game if Fortress_Enemy life is 0
+				if (!(building.fortress_life -= 100)) exit(0);//temp end game if Fortress_Enemy life is 0
 
 				return 0;
 			}
@@ -228,18 +227,16 @@ int Fortress::COLLISION_CIR(Building & enemy_building_)//func check circle colli
 			}
 		}
 	}
-
 	return 0;
 }
 
-void Fortress::DRAW_CIRCLE(sf::RenderWindow& window_)
+void Fortress_Enemy::DRAW_CIRCLE(sf::RenderWindow & window_)
 {
 	circle.setPosition(x_cir - offsetX, y_cir);//offsetX needs for scroll static objects and map
-//	std::cout << x_cir - offsetX << std::endl;
 	window_.draw(circle);
 }
 
-void Fortress::UPDATE_LINE_CAT_FIRE(float x_, float rotate_)//changing lenght and rotate line_of_fire
+void Fortress_Enemy::UPDATE_LINE_CAT_FIRE(float x_, float rotate_)//changing lenght and rotate line_of_fire
 {
 	if (len_line_cat_fire <= 50) len_line_cat_fire += x_;//changing length of line, no more than 50, it counts from 5 to 50 (x_cir_speed diapazone 0.05 -> 0.5)
 	line_catapult_fire.setSize(sf::Vector2f(len_line_cat_fire + 50, 5.f));//set default size of line, +50 needs for more longer length in drawing
@@ -252,26 +249,29 @@ void Fortress::UPDATE_LINE_CAT_FIRE(float x_, float rotate_)//changing lenght an
 	}
 }
 
-void Fortress::DRAW_LINE_CATAPULT_FIRE(sf::RenderWindow& window_)
+void Fortress_Enemy::DRAW_LINE_CATAPULT_FIRE(sf::RenderWindow & window_)
 {
-//	line_catapult_fire.setSize(sf::Vector2f(len_line_cat_fire + 50, 5.f));//set new size of line
+	//	line_catapult_fire.setSize(sf::Vector2f(len_line_cat_fire + 50, 5.f));//set new size of line
 	line_catapult_fire.setPosition(x_catapult - offsetX, y_catapult);//offsetX needs for scroll static objects and map
 	window_.draw(line_catapult_fire);
 }
 
-void Fortress::START_FIRE()//func of start cir fly if fire
+void Fortress_Enemy::START_FIRE()//func of start cir fly if fire
 {
 	if (!cir_live)//only if cir not flying now
 	{
+		catapult_anime_live = true;
+
 		cir_live = true;//reset to default flag cir live
-		x_cir_speed = len_line_cat_fire / 100.f;//speed by X is modyfied lenght of line_of_fire
+//		x_cir_speed = len_line_cat_fire / 100.f;//speed by X is modyfied lenght of line_of_fire
+		x_cir_speed = .1f;//speed by X is modyfied lenght of line_of_fire, (x_cir_speed diapazone 0.05 -> 0.5)
 
 //		std::cout << x_cir_speed << " " << y_cir_speed << std::endl;
 
 		len_line_cat_fire = 5.f;//rest to default lenght of line_of_fire
 
-//		y_cir_speed = .1f;
-		y_cir_speed = (cir_angle - 20) / 100.f;//speed by Y is modyfied lenght of angle of line_of_fire
+		y_cir_speed = .2f;//(y_cir_speed diapazone 0.1 -> 0.25)
+//		y_cir_speed = (cir_angle - 20) / 100.f;//speed by Y is modyfied lenght of angle of line_of_fire
 //		std::cout << y_cir_speed << std::endl;
 
 	}
