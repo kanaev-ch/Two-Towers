@@ -24,11 +24,23 @@ public:
 		"TYiYiYt",
 		"CWwwwWc"
 	};
+
+	//arr of lifes of each block of building
+	int building_tile_lifes_arr[5][7] = {
+		{3,3,3,3,3,3,3},
+		{3,3,3,3,3,3,3},
+		{3,3,3,3,3,3,3},
+		{3,3,3,3,3,3,3},
+		{3,3,3,3,3,3,3}
+	};
+
 	float x_building_left_corner;//left top corner coordinates of fort building rectangle string, initializing in Fortress::Fortress
 	float y_building_top_corner;//left top corner coordinates of fort building rectangle string, initializing in Fortress::Fortress
 
 	Building();
 	~Building();
+
+	void GRAVITY_BLOCKS();
 
 	void DRAW_BUILDING(sf::RenderWindow&, float);
 };

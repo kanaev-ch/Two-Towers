@@ -148,7 +148,8 @@ void Fortress::MOVE_CIRCLE(float time_, float wind_speed_)//changing coord of ci
 {
 	if (cir_live)//Only if circle is live
 	{
-		x_cir += x_cir_speed * time_ + wind_speed_;//changing by X with speed and sf::Clock AND with speed of wind
+//		x_cir += x_cir_speed * time_ + wind_speed_;//changing by X with speed and sf::Clock AND with speed of wind
+		x_cir += (x_cir_speed + wind_speed_) * time_;//changing by X with speed and sf::Clock AND with speed of wind
 	//	if (y_cir < 650) y_cir -= y_cir_speed * time_;//changing by Y with speed and sf::Clock
 		y_cir -= y_cir_speed * time_;//changing by Y with speed and sf::Clock
 //		circle.setPosition(x_cir - offsetX_, y_cir);//set coords in screen with changed parameters
@@ -263,7 +264,7 @@ void Fortress::START_FIRE()//func of start cir fly if fire
 {
 	if (!cir_live)//only if cir not flying now
 	{
-		cir_live = true;//reset to default flag cir live
+		cir_live = true;//reset to default flag cir live, //reset to default flag cir live
 		x_cir_speed = len_line_cat_fire / 100.f;//speed by X is modyfied lenght of line_of_fire
 
 //		std::cout << x_cir_speed << " " << y_cir_speed << std::endl;

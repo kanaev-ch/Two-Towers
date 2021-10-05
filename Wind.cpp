@@ -3,7 +3,7 @@
 
 
 Wind::Wind()
-	:period(0), wind_speed(0)
+	:period(0), /*wind_speed(0)*/ wind_speed(.0f)//wind_speed -0.03f <-> 0.03f
 {
 	for (int i = 0; i < sizeof(snowflake) / sizeof(sf::CircleShape); i++)//init start parameters of snowflakes
 	{
@@ -28,14 +28,14 @@ float Wind::WIND_SPEED()const
 void Wind::SET_WIND_AND_MOVE_SNOWFLAKES(float time_)//func of move and draw snowflakes
 {
 	period += time_;//every time increase period
-	if (period > 50000) period = 0;//reset period if more than 50000
+	if (period > 20000) period = 0;//reset period if more than 20000, its time for change direction of wind
 
 	if (!period) 
-		wind_speed = (static_cast<float>(rand() % 300) - 150) / 100;//when reset period update by rand wind speed
+		wind_speed = (static_cast<float>(rand() % 400) - 200) / 10000;//when reset period, update by rand wind speed, wind_speed -0.03f <-> 0.03f
 
 	for (int i = 0; i < sizeof(snowflake) / sizeof(sf::CircleShape); i++)//cycle update coord of snowflakes
 	{
-		snowflakeX[i] += wind_speed;//update coord by X from wind wpeed
+		snowflakeX[i] += wind_speed * 100;//update coord by X from wind speed
 		snowflakeY[i] += 0.05F * time_;//update coord by Y, fall down snowflakes
 
 		if (snowflakeY[i] > H_by_TILES * 32 - 4 * 32 - 3)//reset coords to top of screen if fall to ground
@@ -44,7 +44,7 @@ void Wind::SET_WIND_AND_MOVE_SNOWFLAKES(float time_)//func of move and draw snow
 			snowflakeY[i] = 0;//by Y top of screen
 		}
 	}
-	std::cout << period << " " << wind_speed << std::endl;
+//	std::cout << period << " " << wind_speed << std::endl;
 }
 
 void Wind::DRAW_SNOWFLAKES(sf::RenderWindow& window_)

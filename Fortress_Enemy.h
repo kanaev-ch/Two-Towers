@@ -31,6 +31,9 @@ private:
 //	bool cir_live;//flag cir fly or not
 	float cir_angle;//angle of drawed line_of_fire, from it is counting of y_cir_speed
 
+	float x_change_dir;//var to change differention of firing change
+
+	float period_start_enemy_fire;//period of time when enemy catapult start fire
 //	int fortress_enemy_life;//lifes of fort building
 
 //	Building building;
@@ -78,6 +81,6 @@ public:
 	void UPDATE_LINE_CAT_FIRE(float, float);
 	void DRAW_LINE_CATAPULT_FIRE(sf::RenderWindow&);
 
-	void START_FIRE();
+	void START_FIRE(float, float);
 };
 

@@ -7,7 +7,7 @@ const float W_float = 1376;
 const float H_float = 800;
 
 const int H_by_TILES = 25;
-const int W_by_TILES = 50;
+const int W_by_TILES = 80;
 
 float offsetX = 0;
 

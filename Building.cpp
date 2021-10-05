@@ -23,6 +23,24 @@ Building::~Building()
 {
 }
 
+void Building::GRAVITY_BLOCKS()
+{
+//	for (unsigned int j = 0; j < building_string[0].getSize(); ++j)//by width
+	for (unsigned int i = 0; i < 4; ++i)//by width
+	{
+//		for (int i = 0; i < (sizeof(building_string) / sizeof(building_string[0]) - 1); ++i)//by height
+		for (int j = 0; j < 7; ++j)//by height
+		{
+			if (building_string[i + 1][j] == 'O')
+			{
+//				building_string[j + 1][i] = building_string[j][i];
+				building_string[i + 1][j] = building_string[i][j];
+				building_string[i][j] = 'O';
+			}
+		}
+	}
+}
+
 void Building::DRAW_BUILDING(sf::RenderWindow& window_, float offsetX)
 {
 	for (int i = 0; i < sizeof(building_string) / sizeof(building_string[0]); ++i)//by height

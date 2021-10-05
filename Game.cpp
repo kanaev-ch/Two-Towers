@@ -25,7 +25,7 @@ int game(sf::RenderWindow& window_)
 
 	Map map;	//create Map
 	Fortress fort(100, 630);	//create object of fortress with start coord of catapult from wich counting all other coords objects
-	Fortress_Enemy fort_enemy(1000, 630);	//create object of fortress with start coord of catapult from wich counting all other coords objects
+	Fortress_Enemy fort_enemy(1300, 630);	//create object of fortress with start coord of catapult from wich counting all other coords objects
 	Wind wind;
 
 
@@ -100,12 +100,15 @@ int game(sf::RenderWindow& window_)
 		if (fort.EXPLODE_LIVE()) fort.EXPLODE_CHANGE_FRAMES(time, true);//explode anime if FLAG is live
 		if (fort_enemy.EXPLODE_LIVE()) fort_enemy.EXPLODE_CHANGE_FRAMES(time, false);//explode anime if FLAG is live
 
-		fort_enemy.START_FIRE();//start enemy fire
+		fort_enemy.START_FIRE(wind.WIND_SPEED(), time);//start enemy fire
 		
 		if (fort.CATAPULT_ANIME_LIVE()) fort.CHANGE_CATAPULT_FRAMES(time);//anime catapult if FLAG is live
 		if (fort_enemy.CATAPULT_ANIME_LIVE()) fort_enemy.CHANGE_CATAPULT_FRAMES(time);//anime catapult if FLAG is live
 
 		wind.SET_WIND_AND_MOVE_SNOWFLAKES(time);
+
+		fort.building.GRAVITY_BLOCKS();
+		fort_enemy.building.GRAVITY_BLOCKS();
 
 		window_.clear();
 		

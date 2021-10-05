@@ -3,9 +3,9 @@
 
 
 Fortress_Enemy::Fortress_Enemy(float x_cat_, float y_cat_)
-	: x_catapult(x_cat_), y_catapult(y_cat_), circle(5.f), x_cir_speed(0), y_cir_speed(0),
+	: x_catapult(x_cat_), y_catapult(y_cat_), circle(5.f), x_cir_speed(.13f), y_cir_speed(.2f),
 	len_line_cat_fire(5.f), cir_live(false), cir_angle(30),//create start parameters of coords, circle size, circle speed, lenght line_of_fire
-	catapult_anime_live(false), catapult_currentFrame(0)//, fortress_enemy_life(0)
+	catapult_anime_live(false), catapult_currentFrame(0), x_change_dir(1.f), period_start_enemy_fire(0)//, fortress_enemy_life(0)
 {
 	texture_catapult.loadFromFile("catapult.png");
 	sprite_catapult.setTexture(texture_catapult);
@@ -143,14 +143,14 @@ void Fortress_Enemy::MOVE_CIRCLE(float time_, float wind_speed_)//changing coord
 {
 	if (cir_live)//Only if circle is live
 	{
-		x_cir -= x_cir_speed * time_ - wind_speed_;//changing by X with speed and sf::Clock AND with speed of wind
-	//	if (y_cir < 650) y_cir -= y_cir_speed * time_;//changing by Y with speed and sf::Clock
+		x_cir -= (x_cir_speed - wind_speed_) * time_;//changing by X with speed and sf::Clock AND with speed of wind
 		y_cir -= y_cir_speed * time_;//changing by Y with speed and sf::Clock
 //		circle.setPosition(x_cir - offsetX_, y_cir);//set coords in screen with changed parameters
 		y_cir_speed -= .00005f * time_;//it's for gravitation of circle, lower speed by Y and changing it vector
 
 		//change offsetX for scroll picture WITH CIR MOVING if it on right edge, but no more than size of map
 //		if (x_cir > W_float - 150 && x_cir < 32 * W_by_TILES - 150) offsetX += x_cir_speed * time_;//It don't need here because don't scroll screen if enemy cir is fly
+		std::cout << wind_speed_ << " " << x_cir_speed  << std::endl;
 	}
 }
 
@@ -166,7 +166,8 @@ void Fortress_Enemy::RESET_CIR_AND_START_EXPLODE()//func reset circle to start p
 	//block of reset circle to start position
 	x_cir = x_catapult + 40;//reset cir to start coords
 	y_cir = y_catapult + 30;//reset cir to start coords
-	x_cir_speed = y_cir_speed = 0;//no cir move by X Y
+//	x_cir_speed = y_cir_speed = 0;//no cir move by X Y
+	y_cir_speed = 0;//no cir move by X Y
 	cir_live = false;//fall flag cir live, needs for one time live cir in time of fly
 	line_catapult_fire.setSize(sf::Vector2f(len_line_cat_fire + 50, 5.f));//set default size of line_of_fire
 }
@@ -256,23 +257,29 @@ void Fortress_Enemy::DRAW_LINE_CATAPULT_FIRE(sf::RenderWindow & window_)
 	window_.draw(line_catapult_fire);
 }
 
-void Fortress_Enemy::START_FIRE()//func of start cir fly if fire
+void Fortress_Enemy::START_FIRE(float wind_speed_, float time_)//func of start cir fly if fire
 {
 	if (!cir_live)//only if cir not flying now
 	{
-		catapult_anime_live = true;
+		period_start_enemy_fire += time_;//if cir not fly increase period when enemy catapult start  start fire
 
-		cir_live = true;//reset to default flag cir live
-//		x_cir_speed = len_line_cat_fire / 100.f;//speed by X is modyfied lenght of line_of_fire
-		x_cir_speed = .1f;//speed by X is modyfied lenght of line_of_fire, (x_cir_speed diapazone 0.05 -> 0.5)
+		if (period_start_enemy_fire >= 10000)//moment of period when enemy catapult start fire
+		{
+			catapult_anime_live = true;//for not fire if cir allready flying
 
-//		std::cout << x_cir_speed << " " << y_cir_speed << std::endl;
+			cir_live = true;//reset to default flag cir live
+			x_cir_speed = 2.13f;//x_cir_speed diapazone 0.115 -> 0.145 step 0.005, middle 0.13
 
-		len_line_cat_fire = 5.f;//rest to default lenght of line_of_fire
+	//		std::cout << x_cir_speed << " " << y_cir_speed << std::endl;
 
-		y_cir_speed = .2f;//(y_cir_speed diapazone 0.1 -> 0.25)
-//		y_cir_speed = (cir_angle - 20) / 100.f;//speed by Y is modyfied lenght of angle of line_of_fire
-//		std::cout << y_cir_speed << std::endl;
+/*			if (x_cir_speed >= .145f) x_change_dir = -1;//x_cir_speed diapazone 0.115 -> 0.145 step 0.005, middle 0.13
+			if (x_cir_speed <= .115f) x_change_dir = 1;//x_cir_speed diapazone 0.115 -> 0.145 step 0.005, middle 0.13
 
+			x_cir_speed += .005f * x_change_dir;//some changing enemy catapult directon of fire by X*/
+
+			y_cir_speed = .2f;//(y_cir_speed diapazone 0.1 -> 0.25)
+
+			period_start_enemy_fire = 0;
+		}
 	}
 }
