@@ -28,6 +28,8 @@ int game(sf::RenderWindow& window_)
 	Fortress_Enemy fort_enemy(1300, 630);	//create object of fortress with start coord of catapult from wich counting all other coords objects
 	Wind wind;
 
+//	Unit unit(500, 640);
+	Infantry infantry;
 
 //	float offsetX = 0;//temp var offset of scrolling map
 
@@ -59,10 +61,17 @@ int game(sf::RenderWindow& window_)
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 			{
 				fort.UPDATE_LINE_CAT_FIRE(0, -1.f);//rotate line of fire
+
+//				unit.fight = true;
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			{
 				fort.UPDATE_LINE_CAT_FIRE(0, 1.f);//rotate line of fire
+
+//				unit.fight = false;
+
+//				infantry.squad.erase(infantry.squad.begin() + 1);
+//				infantry.squad[1].live = false;
 			}
 /*			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
 			{
@@ -107,8 +116,19 @@ int game(sf::RenderWindow& window_)
 
 		wind.SET_WIND_AND_MOVE_SNOWFLAKES(time);
 
+//		fort.building.CHK_BLOCKS_WITH_LIFES();
+//		fort_enemy.building.CHK_BLOCKS_WITH_LIFES();
 		fort.building.GRAVITY_BLOCKS();
 		fort_enemy.building.GRAVITY_BLOCKS();
+
+/*		unit.MOVE(time);
+		unit.UPDATE_FRAME(time);
+		unit.FIGHT();*/
+		infantry.BORN_UNIT(time);
+		infantry.COLLISION(fort, fort_enemy, time);
+		infantry.DEATH_UNIT();
+		infantry.UPDATE_FRAME(time);
+		infantry.MOVE(time);
 
 		window_.clear();
 		
@@ -132,8 +152,13 @@ int game(sf::RenderWindow& window_)
 
 		wind.DRAW_SNOWFLAKES(window_);
 
+		infantry.DRAW(window_);
+//		unit.DRAW(window_);
+
 		window_.display();
 
+		fort.building.GRAVITY_BLOCKS();
+		fort_enemy.building.GRAVITY_BLOCKS();
 //		std::cout << fort.X_CIR() << " " << fort.Y_CIR() << std::endl;
 //		std::cout << "\t\t" << time << std::endl;
 //		std::cout << offsetX << std::endl;

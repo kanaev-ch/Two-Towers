@@ -16,7 +16,7 @@ private:
 	sf::Texture texture;
 	sf::Sprite sprite;
 public:
-	int fortress_life;//lifes of fort building
+//	int fortress_life;//lifes of fort building
 	sf::String building_string[5] = {
 		"OPOPOPO",
 		"OkOkOkO",
@@ -25,13 +25,13 @@ public:
 		"CWwwwWc"
 	};
 
-	//arr of lifes of each block of building
+	//arr of lifes each block of building
 	int building_tile_lifes_arr[5][7] = {
-		{3,3,3,3,3,3,3},
-		{3,3,3,3,3,3,3},
-		{3,3,3,3,3,3,3},
-		{3,3,3,3,3,3,3},
-		{3,3,3,3,3,3,3}
+		{0,10,0,10,0,10,0},
+		{0,10,0,10,0,10,0},
+		{0,10,0,10,0,10,0},
+		{10,10,10,10,10,10,10},
+		{10,10,10,10,10,10,10}
 	};
 
 	float x_building_left_corner;//left top corner coordinates of fort building rectangle string, initializing in Fortress::Fortress
@@ -39,6 +39,8 @@ public:
 
 	Building();
 	~Building();
+
+//	void CHK_BLOCKS_WITH_LIFES();
 
 	void GRAVITY_BLOCKS();
 

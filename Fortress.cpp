@@ -197,11 +197,12 @@ int Fortress::COLLISION_CIR(Building & enemy_building_)//func check circle colli
 				x_cir - offsetX <= j * 32 - offsetX + building.x_building_left_corner + 32 && y_cir <= i * 32 + building.y_building_top_corner + 32 &&
 				building.building_string[i][j] != 'O')//chk if block isn't empty
 			{
-				building.building_string[i][j] = 'O';//mark block empty
+//				building.building_string[i][j] = 'O';//mark block empty
+				building.building_tile_lifes_arr[i][j] = 0;//mark block empty if NO lifes
 
 				RESET_CIR_AND_START_EXPLODE();
 
-				if (!(building.fortress_life -= 100)) exit(0);//temp end game if fortress life is 0
+//				if (!(building.fortress_life -= 100)) exit(0);//temp end game if fortress life is 0
 
 				return 0;
 			}
@@ -219,11 +220,12 @@ int Fortress::COLLISION_CIR(Building & enemy_building_)//func check circle colli
 				x_cir - offsetX <= j * 32 - offsetX + enemy_building_.x_building_left_corner + 32 && y_cir <= i * 32 + enemy_building_.y_building_top_corner + 32 &&
 				enemy_building_.building_string[i][j] != 'O')//chk if block isn't empty
 			{
-				enemy_building_.building_string[i][j] = 'O';//mark block empty
+//				enemy_building_.building_string[i][j] = 'O';//mark block empty
+				enemy_building_.building_tile_lifes_arr[i][j] = 0;//mark block empty if NO lifes
 
 				RESET_CIR_AND_START_EXPLODE();
 
-				if (!(enemy_building_.fortress_life -= 100)) exit(0);//temp end game if fortress life is 0
+//				if (!(enemy_building_.fortress_life -= 100)) exit(0);//temp end game if fortress life is 0
 
 				return 0;
 			}
