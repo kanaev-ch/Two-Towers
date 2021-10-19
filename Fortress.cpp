@@ -35,6 +35,12 @@ Fortress::Fortress(float x_cat_, float y_cat_)
 			if (building_string[i][j] != 'O') fortress_life += 100; //each block plus 100, except 'O' (empty)
 		}
 	}*/
+
+	explode_buffer.loadFromFile("explode.ogg");//load buffer of sound from file
+	explode_sound.setBuffer(explode_buffer);//set sound
+
+	explode_building_buffer.loadFromFile("explode_building.ogg");//load buffer of sound from file
+	explode_building_sound.setBuffer(explode_building_buffer);//set sound
 }
 
 
@@ -183,6 +189,9 @@ int Fortress::COLLISION_CIR(Building & enemy_building_)//func check circle colli
 	if (y_cir > 660 && (x_cir - offsetX != x_catapult + 10))//for not working if circle is at start place of catapult
 	{
 		RESET_CIR_AND_START_EXPLODE();
+
+		explode_sound.play();//play sound of explode
+
 		return 0;//exit without cheking farer
 	}
 
@@ -203,6 +212,8 @@ int Fortress::COLLISION_CIR(Building & enemy_building_)//func check circle colli
 				RESET_CIR_AND_START_EXPLODE();
 
 //				if (!(building.fortress_life -= 100)) exit(0);//temp end game if fortress life is 0
+
+				explode_building_sound.play();//play sound of building explode
 
 				return 0;
 			}
@@ -226,6 +237,8 @@ int Fortress::COLLISION_CIR(Building & enemy_building_)//func check circle colli
 				RESET_CIR_AND_START_EXPLODE();
 
 //				if (!(enemy_building_.fortress_life -= 100)) exit(0);//temp end game if fortress life is 0
+
+				explode_building_sound.play();//play sound of building explode
 
 				return 0;
 			}

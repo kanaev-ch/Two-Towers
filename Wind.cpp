@@ -35,7 +35,8 @@ void Wind::SET_WIND_AND_MOVE_SNOWFLAKES(float time_)//func of move and draw snow
 
 	for (int i = 0; i < sizeof(snowflake) / sizeof(sf::CircleShape); i++)//cycle update coord of snowflakes
 	{
-		snowflakeX[i] += wind_speed * 100;//update coord by X from wind speed
+//		snowflakeX[i] += wind_speed * 100;//update coord by X from wind speed
+		snowflakeX[i] += wind_speed * 10 * time_;//update coord by X from wind speed
 		snowflakeY[i] += 0.05F * time_;//update coord by Y, fall down snowflakes
 
 		if (snowflakeY[i] > H_by_TILES * 32 - 4 * 32 - 3)//reset coords to top of screen if fall to ground

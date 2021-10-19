@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <cmath>
 #include "Data.h"
 #include "Explosion.h"
@@ -34,6 +35,13 @@ private:
 //	int fortress_life;//lifes of fort building
 
 //	Building building;
+
+	//Block of sound
+	sf::SoundBuffer explode_buffer;//buffer sound explode
+	sf::Sound explode_sound;//sound explode
+
+	sf::SoundBuffer explode_building_buffer;//buffer building sound explode
+	sf::Sound explode_building_sound;//building sound explode
 public:
 	Building building;
 //	int fortress_life;//lifes of fort building

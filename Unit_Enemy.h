@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Data.h"
 
-class Unit
+class Unit_Enemy
 {
 private:
 	float x, y;//coords of unit
@@ -26,8 +26,10 @@ public:
 	float currentFrame;//var current frame for anime
 	bool melee;//flag melee state or not
 
-	Unit(sf::Texture&, float, float);
-	~Unit();
+public:
+	Unit_Enemy(sf::Texture&, float, float);
+//	Unit_Enemy(float, float);
+	~Unit_Enemy();
 
 	float X()const;
 	float Y()const;
@@ -35,7 +37,7 @@ public:
 	void UPDATE_FRAME(float);
 
 	void MOVE(float);
-//	void FIGHT(float, int&);
+	//	void FIGHT(float, int&);
 	bool FIGHT(float, int&);
 	void DEATH();
 

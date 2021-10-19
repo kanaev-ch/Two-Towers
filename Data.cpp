@@ -11,6 +11,11 @@ const int W_by_TILES = 80;
 
 float offsetX = 0;
 
+int end_game_flag = 0;
+
+bool enemy_fire_near_fort = true;
+
+float time_for_melee = 0;
 /*sf::String MAP[H_by_TILES] = {
 	"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
 	"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",

@@ -35,6 +35,12 @@ Fortress_Enemy::Fortress_Enemy(float x_cat_, float y_cat_)
 			if (building.building_string[i][j] != 'O') fortress_enemy_life += 100; //each block plus 100, except 'O' (empty)
 		}
 	}*/
+
+	explode_buffer.loadFromFile("explode.ogg");//load buffer of sound from file
+	explode_sound.setBuffer(explode_buffer);//set sound
+
+	explode_building_buffer.loadFromFile("explode_building.ogg");//load buffer of sound from file
+	explode_building_sound.setBuffer(explode_building_buffer);//set sound
 }
 
 
@@ -181,6 +187,8 @@ int Fortress_Enemy::COLLISION_CIR(Building& enemy_building_)//func check circle 
 	{
 		RESET_CIR_AND_START_EXPLODE();
 
+		explode_sound.play();//play sound of explode
+
 		return 0;//exit without cheking farer
 	}
 
@@ -202,6 +210,8 @@ int Fortress_Enemy::COLLISION_CIR(Building& enemy_building_)//func check circle 
 
 //				if (!(fortress_enemy_life -= 100)) exit(0);//temp end game if Fortress_Enemy life is 0
 //				if (!(building.fortress_life -= 100)) exit(0);//temp end game if Fortress_Enemy life is 0
+
+				explode_building_sound.play();//play sound of building explode
 
 				return 0;
 			}
@@ -225,6 +235,8 @@ int Fortress_Enemy::COLLISION_CIR(Building& enemy_building_)//func check circle 
 				RESET_CIR_AND_START_EXPLODE();
 
 //				if (!(enemy_building_.fortress_life -= 100)) exit(0);//temp end game if fortress life is 0
+
+				explode_building_sound.play();//play sound of building explode
 
 				return 0;
 			}
@@ -261,7 +273,7 @@ void Fortress_Enemy::DRAW_LINE_CATAPULT_FIRE(sf::RenderWindow & window_)
 
 void Fortress_Enemy::START_FIRE(float wind_speed_, float time_)//func of start cir fly if fire
 {
-	if (!cir_live)//only if cir not flying now
+	if (!cir_live && !enemy_fire_near_fort)//only if cir not flying now AND near OUR fort and catapult
 	{
 		period_start_enemy_fire += time_;//if cir not fly increase period when enemy catapult start  start fire
 

@@ -29,7 +29,10 @@ int game(sf::RenderWindow& window_)
 	Wind wind;
 
 //	Unit unit(500, 640);
+//	Unit_Enemy unit(1300, 640);
 	Infantry infantry;
+
+	End_Game_Text end_game_text;
 
 //	float offsetX = 0;//temp var offset of scrolling map
 
@@ -44,91 +47,109 @@ int game(sf::RenderWindow& window_)
 //		if (offsetX > 220) offsetX = 220;
 
 		sf::Event event;
+
 		while (window_.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
 				window_.close();
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			{
-				if (!fort.CIR_LIVE() && offsetX < 32 * W_by_TILES - W_float - 4)//don't scroll map over right edge AND in time of flight cir
-					offsetX += 10.f;//scroll map
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			{
-				if (!fort.CIR_LIVE() && offsetX > 0)//don't scroll map over left edge AND in time of flight cir
-					offsetX -= 10.f;//scroll map
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			{
-				fort.UPDATE_LINE_CAT_FIRE(0, -1.f);//rotate line of fire
 
-//				unit.fight = true;
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			if (!end_game_flag)//if only not end game
 			{
-				fort.UPDATE_LINE_CAT_FIRE(0, 1.f);//rotate line of fire
-
-//				unit.fight = false;
-
-//				infantry.squad.erase(infantry.squad.begin() + 1);
-//				infantry.squad[1].live = false;
-			}
-/*			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
-			{
-				fort.UPDATE_LINE_CAT_FIRE(1.f, 0);//increase lenght line_of_fire for speed of circle by X
-			}*/
-/*			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-			{				
-//				fort.START_FIRE();
-			}*/
-			if (event.type == sf::Event::KeyReleased) //check for release key
-			{
-				if (event.key.code == sf::Keyboard::Space) //what key release
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 				{
-					fort.START_FIRE();
-					fort.CATAPULT_ANIME_LIVE(true);
+					if (!fort.CIR_LIVE() && offsetX < 32 * W_by_TILES - W_float - 4)//don't scroll map over right edge AND in time of flight cir
+						offsetX += 10.f;//scroll map
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+				{
+					if (!fort.CIR_LIVE() && offsetX > 0)//don't scroll map over left edge AND in time of flight cir
+						offsetX -= 10.f;//scroll map
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+				{
+					fort.UPDATE_LINE_CAT_FIRE(0, -1.f);//rotate line of fire
 
-//					fort_enemy.START_FIRE();
-//					fort_enemy.CATAPULT_ANIME_LIVE(true);
+	//				unit.fight = true;
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+				{
+					fort.UPDATE_LINE_CAT_FIRE(0, 1.f);//rotate line of fire
+
+	//				unit.fight = false;
+
+	//				infantry.squad.erase(infantry.squad.begin() + 1);
+	//				infantry.squad[1].live = false;
+				}
+				/*			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+							{
+								fort.UPDATE_LINE_CAT_FIRE(1.f, 0);//increase lenght line_of_fire for speed of circle by X
+							}*/
+							/*			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+										{
+							//				fort.START_FIRE();
+										}*/
+				if (event.type == sf::Event::KeyReleased) //check for release key
+				{
+					if (event.key.code == sf::Keyboard::Space) //what key release
+					{
+						fort.START_FIRE();
+						fort.CATAPULT_ANIME_LIVE(true);
+
+						//					fort_enemy.START_FIRE();
+						//					fort_enemy.CATAPULT_ANIME_LIVE(true);
+					}
 				}
 			}
 		}
 
 //		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		if (!end_game_flag)//if only not end game
 		{
-			fort.UPDATE_LINE_CAT_FIRE(.05f, 0);//increase lenght line_of_fire for speed of circle by X
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+			{
+				fort.UPDATE_LINE_CAT_FIRE(.05f, 0);//increase lenght line_of_fire for speed of circle by X
+			}
+
+
+			fort.MOVE_CIRCLE(time, wind.WIND_SPEED());//moving circle, changing it coords by X Y, Block of end circle fly and start explode is inside, AND with speed of wind
+			fort_enemy.MOVE_CIRCLE(time, wind.WIND_SPEED());//moving circle, changing it coords by X Y, Block of end circle fly and start explode is inside, AND with speed of wind
+
+			fort.COLLISION_CIR(fort_enemy.building);//func check circle collision with ground or buildings: enemy (argument), own building (it's inside)
+			fort_enemy.COLLISION_CIR(fort.building);//func check circle collision with ground or buildings: enemy (argument), own building (it's inside)
+
+			if (fort.EXPLODE_LIVE()) fort.EXPLODE_CHANGE_FRAMES(time, true);//explode anime if FLAG is live
+			if (fort_enemy.EXPLODE_LIVE()) fort_enemy.EXPLODE_CHANGE_FRAMES(time, false);//explode anime if FLAG is live
+
+			fort_enemy.START_FIRE(wind.WIND_SPEED(), time);//start enemy fire
+
+			if (fort.CATAPULT_ANIME_LIVE()) fort.CHANGE_CATAPULT_FRAMES(time);//anime catapult if FLAG is live
+			if (fort_enemy.CATAPULT_ANIME_LIVE()) fort_enemy.CHANGE_CATAPULT_FRAMES(time);//anime catapult if FLAG is live
+
+			wind.SET_WIND_AND_MOVE_SNOWFLAKES(time);
+
+			//		fort.building.CHK_BLOCKS_WITH_LIFES();
+			//		fort_enemy.building.CHK_BLOCKS_WITH_LIFES();
+			fort.building.GRAVITY_BLOCKS();
+			fort_enemy.building.GRAVITY_BLOCKS();
+
+			/*		unit.MOVE(time);
+					unit.UPDATE_FRAME(time);*/
+					//		unit.FIGHT();
+			infantry.BORN_UNIT(time);
+
+			infantry.MELEE(time);
+			infantry.COLLISION(fort, fort_enemy, time);
+
+			infantry.DEATH_UNIT();
+			infantry.UPDATE_FRAME(time);
+			infantry.MOVE(time);
+			infantry.DONT_ENEMY_FIRE_NEAR_FORT();//enemy fire near OUR fort and catapult, because frendly fire
+
+			fort.building.GRAVITY_BLOCKS();
+			fort_enemy.building.GRAVITY_BLOCKS();
+
+			time_for_melee += time;//increase melee sound, for one time play, inside infantry.melee
 		}
-
-		fort.MOVE_CIRCLE(time, wind.WIND_SPEED());//moving circle, changing it coords by X Y, Block of end circle fly and start explode is inside, AND with speed of wind
-		fort_enemy.MOVE_CIRCLE(time, wind.WIND_SPEED());//moving circle, changing it coords by X Y, Block of end circle fly and start explode is inside, AND with speed of wind
-
-		fort.COLLISION_CIR(fort_enemy.building);//func check circle collision with ground or buildings: enemy (argument), own building (it's inside)
-		fort_enemy.COLLISION_CIR(fort.building);//func check circle collision with ground or buildings: enemy (argument), own building (it's inside)
-		
-		if (fort.EXPLODE_LIVE()) fort.EXPLODE_CHANGE_FRAMES(time, true);//explode anime if FLAG is live
-		if (fort_enemy.EXPLODE_LIVE()) fort_enemy.EXPLODE_CHANGE_FRAMES(time, false);//explode anime if FLAG is live
-
-		fort_enemy.START_FIRE(wind.WIND_SPEED(), time);//start enemy fire
-		
-		if (fort.CATAPULT_ANIME_LIVE()) fort.CHANGE_CATAPULT_FRAMES(time);//anime catapult if FLAG is live
-		if (fort_enemy.CATAPULT_ANIME_LIVE()) fort_enemy.CHANGE_CATAPULT_FRAMES(time);//anime catapult if FLAG is live
-
-		wind.SET_WIND_AND_MOVE_SNOWFLAKES(time);
-
-//		fort.building.CHK_BLOCKS_WITH_LIFES();
-//		fort_enemy.building.CHK_BLOCKS_WITH_LIFES();
-		fort.building.GRAVITY_BLOCKS();
-		fort_enemy.building.GRAVITY_BLOCKS();
-
-/*		unit.MOVE(time);
-		unit.UPDATE_FRAME(time);
-		unit.FIGHT();*/
-		infantry.BORN_UNIT(time);
-		infantry.COLLISION(fort, fort_enemy, time);
-		infantry.DEATH_UNIT();
-		infantry.UPDATE_FRAME(time);
-		infantry.MOVE(time);
 
 		window_.clear();
 		
@@ -155,10 +176,19 @@ int game(sf::RenderWindow& window_)
 		infantry.DRAW(window_);
 //		unit.DRAW(window_);
 
+		if (end_game_flag)//end game
+		{
+			end_game_text.DRAW(window_);
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+			{
+				return 0;
+			}
+		}
+
 		window_.display();
 
-		fort.building.GRAVITY_BLOCKS();
-		fort_enemy.building.GRAVITY_BLOCKS();
+//		fort.building.GRAVITY_BLOCKS();
+//		fort_enemy.building.GRAVITY_BLOCKS();
 //		std::cout << fort.X_CIR() << " " << fort.Y_CIR() << std::endl;
 //		std::cout << "\t\t" << time << std::endl;
 //		std::cout << offsetX << std::endl;
