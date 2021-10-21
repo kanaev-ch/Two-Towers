@@ -1,4 +1,4 @@
-#include "game.h"
+#include "Game.h"
 //#include "Fortress.h"
 
 static float TIME(sf::Clock& c_)//func for binding to time, This func doesn't work or work!!! WHAT A FUCK!!
